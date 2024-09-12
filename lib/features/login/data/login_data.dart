@@ -4,11 +4,11 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
 import 'package:projects/config/constants/http_constantss.dart';
 import 'package:projects/config/routes/api_routes.dart';
-import '../../Home/pages/Home_screen.dart';
+import '../../home/pages/Home_screen.dart';
+import '../data/response/login_response_model.dart';
 import '../models/login_request_model.dart';
-import '../response/login_response_model.dart';
 
-class LoginController {
+class LoginData {
 
 
   Future<void> loginUser(BuildContext context,String username, String password, String token, String deviceId) async{

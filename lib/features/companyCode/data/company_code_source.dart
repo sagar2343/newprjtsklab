@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:projects/config/routes/api_routes.dart';
-import 'package:projects/features/company_code/data/response/CompanyCode.dart';
+import 'package:projects/features/companyCode/data/response/CompanyCode.dart';
 import 'package:http/http.dart' as http;
 import '../../../config/constants/http_constantss.dart';
 

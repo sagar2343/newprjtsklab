@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import '../../company_code/controller/companycode_controller.dart';
-import '../controller/login_controller.dart';
+import '../../companyCode/controller/companycode_controller.dart';
+import '../data/login_data.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -20,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final CompanyCodeController _companyCodeControllerLogic = CompanyCodeController();
 
-  final LoginController _loginController = LoginController();
+  final LoginData _loginController = LoginData();
 
   String? _companyName;
 
