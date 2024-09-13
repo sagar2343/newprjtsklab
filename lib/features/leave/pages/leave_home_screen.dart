@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:projects/features/widgets/custom_appbar.dart';
 
+import '../../../config/theme/color.dart';
+
 class LeaveHomeScreen extends StatefulWidget {
   const LeaveHomeScreen({super.key});
 
@@ -102,62 +104,107 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
 
             ///Leaves circular data list
             SizedBox(height: h * 0.02),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CircleAvatar(
-                      radius: 25,
-                      backgroundColor: Colors.blue,
-                      child: Center(child: Text('32.0',style: TextStyle(fontSize: 12,color: Colors.white))),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.black, // Border color
+                          width: 1.0, // Border width
+                        ),
+                      ),
+                      child: const CircleAvatar(
+                        radius: 25,
+                        backgroundColor: sos2,
+                        child: Center(child: Text('32.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                      ),
                     ),
-                    Text('Total',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
+                    const Text('Total',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
                   ],
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CircleAvatar(
-                      radius: 25,
-                      backgroundColor: Colors.yellow,
-                      child: Center(child: Text('0.0',style: TextStyle(fontSize: 12,color: Colors.white))),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.black, // Border color
+                          width: 1.0, // Border width
+                        ),
+                      ),
+                      child: const CircleAvatar(
+                        radius: 25,
+                        backgroundColor: calendar4,
+                        child: Center(child: Text('0.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                      ),
                     ),
-                    Text('Encased',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
+                    const Text('Encased',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
                   ],
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CircleAvatar(
-                      radius: 25,
-                      backgroundColor: Colors.red,
-                      child: Center(child: Text('1.0',style: TextStyle(fontSize: 12,color: Colors.white))),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.black, // Border color
+                          width: 1.0, // Border width
+                        ),
+                      ),
+                      child: const CircleAvatar(
+                        radius: 25,
+                        backgroundColor: calendar6,
+                        child: Center(child: Text('1.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                      ),
                     ),
-                    Text('Elapsed',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
+                    const Text('Elapsed',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
                   ],
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CircleAvatar(
-                      radius: 25,
-                      backgroundColor: Colors.grey,
-                      child: Center(child: Text('0.0',style: TextStyle(fontSize: 12,color: Colors.white))),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.black, // Border color
+                          width: 1.0, // Border width
+                        ),
+                      ),
+                      child: const CircleAvatar(
+                        radius: 25,
+                        backgroundColor: calendar1,
+                        child: Center(child: Text('0.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                      ),
                     ),
-                    Text('Taken',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
+                    const Text('Taken',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
                   ],
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    CircleAvatar(
-                      radius: 25,
-                      backgroundColor: Colors.purple,
-                      child: Center(child: Text('33.0',style: TextStyle(fontSize: 12,color: Colors.white))),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.black, // Border color
+                          width: 1.0, // Border width
+                        ),
+                      ),
+                      child: const CircleAvatar(
+                        radius: 25,
+                        backgroundColor: healthcare13,
+                        child: Center(child: Text('33.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                      ),
                     ),
-                    Text('Available',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
+                    const Text('Available',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
                   ],
                 )
               ],
@@ -187,16 +234,16 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                     height: h * 0.11,
                     width: w * 0.29,
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: lightblue,
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.red.shade900)
+                      border: Border.all(color: blue)
                     ),
                     child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text('21.0',style: TextStyle(color: Colors.white)),
-                        Text('Earned Leave',style: TextStyle(color: Colors.white))
+                        Text('21.0',style: TextStyle(color: Colors.black)),
+                        Text('Earned Leave',style: TextStyle(color: Colors.black))
                       ],
                     ),
                   ),
@@ -207,16 +254,16 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                     height: h * 0.11,
                     width: w * 0.29,
                     decoration: BoxDecoration(
-                        color: Colors.blue,
+                        color: lightpink,
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.blue.shade900)
+                        border: Border.all(color: healthcolor3)
                     ),
                     child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text('5.0',style: TextStyle(color: Colors.white)),
-                        Text('Casual Leave',style: TextStyle(color: Colors.white))
+                        Text('5.0',style: TextStyle(color: Colors.black)),
+                        Text('Casual Leave',style: TextStyle(color: Colors.black))
                       ],
                     ),
                   ),
@@ -227,16 +274,16 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                     height: h * 0.11,
                     width: w * 0.29,
                     decoration: BoxDecoration(
-                        color: Colors.purple,
+                        color: sos1,
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.purple.shade900)
+                        border: Border.all(color: lightpurple)
                     ),
                     child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text('6.0',style: TextStyle(color: Colors.white)),
-                        Text('Sick Leave',style: TextStyle(color: Colors.white))
+                        Text('6.0',style: TextStyle(color: Colors.black)),
+                        Text('Sick Leave',style: TextStyle(color: Colors.black))
                       ],
                     ),
                   ),
@@ -268,7 +315,7 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                     height: h * 0.11,
                     width: w * 0.29,
                     decoration: BoxDecoration(
-                        color: Colors.grey[300],
+                        color: cartcolor7,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: Colors.grey.shade600)
                     ),
@@ -291,7 +338,7 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                     height: h * 0.11,
                     width: w * 0.29,
                     decoration: BoxDecoration(
-                        color: Colors.grey[300],
+                        color: cartcolor2,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: Colors.grey.shade600)
                     ),
@@ -314,7 +361,7 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                     height: h * 0.11,
                     width: w * 0.29,
                     decoration: BoxDecoration(
-                        color: Colors.grey[300],
+                        color: cartcolor1,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: Colors.grey.shade600)
                     ),
@@ -343,7 +390,7 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                     height: h * 0.11,
                     width: w * 0.45,
                     decoration: BoxDecoration(
-                        color: Colors.grey[300],
+                        color: cartcolor8,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: Colors.grey.shade600)
                     ),
@@ -366,7 +413,7 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                     height: h * 0.11,
                     width: w * 0.45,
                     decoration: BoxDecoration(
-                        color: Colors.grey[300],
+                        color: cartcolor10,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: Colors.grey.shade600)
                     ),
