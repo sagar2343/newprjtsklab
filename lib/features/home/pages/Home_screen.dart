@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:projects/features/holidayList/pages/holidaylist_screen.dart';
+import 'package:projects/features/leave/pages/leave_home_screen.dart';
+import 'package:projects/features/widgets/custom_appbar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,9 +14,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Map<String, dynamic>> gridItems = [
     {'name':'ATTENDANCE', 'image':'assets/images/clip1.png', 'page': const Page1()},
-    {'name':'LEAVE', 'image':'assets/images/clip2.png', 'page': const Page2()},
+    {'name':'LEAVE', 'image':'assets/images/clip2.png', 'page': const LeaveHomeScreen()},
     {'name':'OR PUNCH', 'image':'assets/images/clip3.png', 'page': const Page3()},
-    {'name':'HOLIDAY LIST', 'image':'assets/images/clip4.png', 'page': const Page4()},
+    {'name':'HOLIDAY LIST', 'image':'assets/images/clip4.png', 'page': const HolidayListScreen()},
     {'name':'WEBSITE', 'image':'assets/images/clip5.png', 'page': const Page5()},
     {'name':'DOWNLOAD', 'image':'assets/images/clip6.png', 'page': const Page5()},
     {'name':'GEO FENCING', 'image':'assets/images/clip7.png', 'page': const Page5()},
@@ -28,12 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.black54,
-        title: const Text(
-          'Good Afternoon',
-          style: TextStyle(color: Colors.white),
-        ),
+      appBar: CustomAppBar(
+        title: 'Good Afternoon',
         actions: [
           PopupMenuButton(
             iconColor: Colors.white,
@@ -192,17 +191,6 @@ class Page1 extends StatelessWidget {
   }
 }
 
-class Page2 extends StatelessWidget {
-  const Page2({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Page 2')),
-      body: const Center(child: Text('This is Page 2')),
-    );
-  }
-}
 
 class Page3 extends StatelessWidget {
   const Page3({Key? key}) : super(key: key);
@@ -216,17 +204,6 @@ class Page3 extends StatelessWidget {
   }
 }
 
-class Page4 extends StatelessWidget {
-  const Page4({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Page 4')),
-      body: const Center(child: Text('This is Page 4')),
-    );
-  }
-}
 
 class Page5 extends StatelessWidget {
   const Page5({Key? key}) : super(key: key);

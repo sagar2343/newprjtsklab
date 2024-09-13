@@ -1,51 +1,34 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
+import 'package:projects/features/widgets/custom_appbar.dart';
 import '../../companyCode/controller/companycode_controller.dart';
+import '../controller/login_controller.dart';
 import '../data/login_data.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _isPasswordVisible = false; // For password visibility toggle
-  bool _isButtonEnabled = false;
-
-  final TextEditingController _companyCodeController = TextEditingController();
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final LoginController _loginController = LoginController();
   final CompanyCodeController _companyCodeControllerLogic = CompanyCodeController();
-
-  final LoginData _loginController = LoginData();
-
-  String? _companyName;
+  final LoginData _loginData = LoginData();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _companyCodeController.addListener(() {
-      _companyCodeControllerLogic.onCompanyCodeChanged(
-          _companyCodeController, (companyName) {
-        setState(() {
-          _companyName = companyName;
-          _validateButtonState();
-        });
+    _loginController.initListeners(() {
+      setState(() {
+        _loginController.validateButtonState(() => setState(() {}));
       });
-    });
-    _usernameController.addListener(_validateButtonState);
-    _passwordController.addListener(_validateButtonState);
+    }, _companyCodeControllerLogic);
   }
 
   @override
   void dispose() {
-    _companyCodeController.dispose();
-    _usernameController.dispose();
-    _passwordController.dispose();
+    _loginController.dispose();
     super.dispose();
   }
 
@@ -55,12 +38,8 @@ class _LoginScreenState extends State<LoginScreen> {
     final h = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black54,
-        title: const Text(
-          'Login',
-          style: TextStyle(color: Colors.white),
-        ),
+      appBar: const CustomAppBar(
+        title: 'Login',
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -72,21 +51,20 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(
                   child: Image.asset('assets/images/logo.png', width: w * 0.5)),
 
-              // Text of company
               Center(
-                  child: Text(_companyName != null ? '( $_companyName )' : '',
+                  child: Text(_loginController.companyName != null
+                      ? '( ${_loginController.companyName} )'
+                      : '',
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                           fontSize: 16, fontWeight: FontWeight.w500))),
               SizedBox(height: h * 0.03),
 
-              // Company Code Field
               TextField(
-                controller: _companyCodeController,
+                controller: _loginController.companyCodeController,
                 decoration: InputDecoration(
                   labelText: 'Company Code',
-                  // border: const UnderlineInputBorder(),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -95,9 +73,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: h * 0.02),
 
-              // Username Field
               TextField(
-                controller: _usernameController,
+                controller: _loginController.usernameController,
                 decoration: InputDecoration(
                   labelText: 'Username',
                   border: OutlineInputBorder(
@@ -108,10 +85,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: h * 0.02),
 
-              // Password Field
               TextField(
-                controller: _passwordController,
-                obscureText: !_isPasswordVisible,
+                controller: _loginController.passwordController,
+                obscureText: !_loginController.isPasswordVisible,
                 decoration: InputDecoration(
                   labelText: 'Password',
                   border: OutlineInputBorder(
@@ -120,14 +96,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   prefixIcon: Icon(Icons.lock, color: Colors.grey[700]),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _isPasswordVisible
+                      _loginController.isPasswordVisible
                           ? Icons.visibility
                           : Icons.visibility_off,
                       color: Colors.grey[700],
                     ),
                     onPressed: () {
                       setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
+                        _loginController.togglePasswordVisibility();
                       });
                     },
                   ),
@@ -135,17 +111,20 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: h * 0.03),
 
-              // Sign In Button
               ElevatedButton(
-                onPressed: () {
-                  _isButtonEnabled ? _validateAndLogin() : null ;
-                },
+                onPressed: _loginController.isButtonEnabled
+                    ? () {
+                  _loginController.validateAndLogin(context, _loginData);
+                }
+                    : null,
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 16.0),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  backgroundColor: _isButtonEnabled ? Colors.blue[700] : Colors.grey[600],
+                  backgroundColor: _loginController.isButtonEnabled
+                      ? Colors.blue[700]
+                      : Colors.grey[600],
                 ),
                 child: const Text(
                   'Sign In',
@@ -154,14 +133,13 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SizedBox(height: h * 0.04),
 
-              // Help Row
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                     decoration: BoxDecoration(
                       color: Colors.grey[600],
                       borderRadius: BorderRadius.circular(8),
@@ -190,53 +168,4 @@ class _LoginScreenState extends State<LoginScreen> {
       ),
     );
   }
-
-  void _validateButtonState() {
-    final username = _usernameController.text;
-    final password = _passwordController.text;
-    final companyCode = _companyCodeController.text;
-
-    setState(() {
-      _isButtonEnabled = username.isNotEmpty &&
-          password.isNotEmpty &&
-          companyCode.isNotEmpty &&
-          _companyName != null &&
-          _companyName != "Company not found";
-    });
-  }
-
-  void _validateAndLogin() {
-    final username = _usernameController.text;
-    final password = _passwordController.text;
-    final companyCode = _companyCodeController.text;
-
-    if (username.isEmpty || password.isEmpty || companyCode.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please fill in all fields'),
-          backgroundColor: Colors.red,
-          duration: Duration(milliseconds: 700),
-        ),
-      );
-    } else {
-      if(_companyName == null || _companyName == "Company not found"){
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('please enter valid Company Code !'),
-              backgroundColor: Colors.red,
-              duration: Duration(milliseconds: 700),
-            ),
-        );
-      } else {
-        _loginController.loginUser(
-          context,
-          username,
-          password,
-          "ABCD1234", // Example token
-          "ABCD1234", // Example deviceId
-        );
-      }
-    }
-  }
-
 }
