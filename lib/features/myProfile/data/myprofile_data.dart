@@ -9,7 +9,7 @@ class MyProfileApiCall {
     try {
       // Construct the API URL with query parameters
       // final String apiUrl = '${HttpConstants.getBaseURL()}$APIHomeGridItem?StrRollCd=$strRollCd&StrEmpCd=$strEmpCd';
-      final String apiUrl = 'http://hrms.thalappakatti.com:4949/HRISAPI/Einfo/FunPubFetchEnfoDetails?StrRollCd=01&StrEmpCd=D027673';
+      const String apiUrl = 'http://hrms.thalappakatti.com:4949/HRISAPI/Einfo/FunPubFetchEnfoDetails?StrRollCd=01&StrEmpCd=D027673';
       final Uri uri = Uri.parse(apiUrl);
 
       // Perform the GET request

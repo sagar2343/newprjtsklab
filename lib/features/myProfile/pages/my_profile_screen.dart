@@ -81,7 +81,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(top: 12.0,bottom: 10.0),
-                        child: Text("${employee.proPubEmployeeDetails?.first.proPubStrCompanyName}",style: const TextStyle(fontSize: 18,fontWeight: FontWeight.w500)),
+                        child: Text("${employee.proPubEmployeeDetails!.first.proPubStrCompanyName}",style: const TextStyle(fontSize: 18,fontWeight: FontWeight.w500)),
                       ),
                       Container(
                         height: h * 0.16,
@@ -90,9 +90,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
                         ),
-                        child: const Row(
+                        child: Row(
                           children: [
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.symmetric(horizontal: 10.0),
                               child: CircleAvatar(
                                 radius: 40,
@@ -108,9 +108,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('ID0434223',style: TextStyle(fontSize: 18,fontWeight: FontWeight.w600)),
-                                Text('Eswara Rao Madgula',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500)),
-                                Text('Senior Manager HR',style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400))
+                                Text('${employee.proPubEmployeeDetails?.first.proPubStrEmpcd}',style: const TextStyle(fontSize: 18,fontWeight: FontWeight.w600)),
+                                Text('${employee.proPubEmployeeDetails?.first.proPubStrFullName}',style: const TextStyle(fontSize: 16,fontWeight: FontWeight.w500)),
+                                Text('${employee.proPubEmployeeDetails?.first.proPubStrDesignation}',style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400))
                               ],
                             )
                           ],
