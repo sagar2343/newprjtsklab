@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:projects/features/holidayList/pages/holidaylist_screen.dart';
 import 'package:projects/features/leave/pages/leave_home_screen.dart';
+import 'package:projects/features/myProfile/pages/my_profile_screen.dart';
 import 'package:projects/features/widgets/custom_appbar.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -41,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
               if(value == 'notification'){
                 //
               } else if(value == 'myProfile'){
-                //
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> const MyProfileScreen()));
               }else if(value == 'logout'){
                 //
               }

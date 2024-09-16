@@ -236,7 +236,7 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                     decoration: BoxDecoration(
                       color: lightblue,
                       borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: blue)
+                      border: Border.all(color: Colors.black)
                     ),
                     child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -256,7 +256,7 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                     decoration: BoxDecoration(
                         color: lightpink,
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: healthcolor3)
+                        border: Border.all(color: Colors.black)
                     ),
                     child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -276,7 +276,7 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                     decoration: BoxDecoration(
                         color: sos1,
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: lightpurple)
+                        border: Border.all(color: Colors.black)
                     ),
                     child: const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
