@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:projects/features/holidayList/pages/holidaylist_screen.dart';
+import 'package:projects/features/home/controller/home_grid_controller.dart';
 import 'package:projects/features/leave/pages/leave_home_screen.dart';
 import 'package:projects/features/myProfile/pages/my_profile_screen.dart';
 import 'package:projects/features/widgets/custom_appbar.dart';
+
+import '../data/home_grid_data.dart';
+import '../data/response/home_grid_response.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,15 +17,15 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  final List<Map<String, dynamic>> gridItems = [
-    {'name':'ATTENDANCE', 'image':'assets/images/clip1.png', 'page': const Page1()},
-    {'name':'LEAVE', 'image':'assets/images/clip2.png', 'page': const LeaveHomeScreen()},
-    {'name':'OR PUNCH', 'image':'assets/images/clip3.png', 'page': const Page3()},
-    {'name':'HOLIDAY LIST', 'image':'assets/images/clip4.png', 'page': const HolidayListScreen()},
-    {'name':'WEBSITE', 'image':'assets/images/clip5.png', 'page': const Page5()},
-    {'name':'DOWNLOAD', 'image':'assets/images/clip6.png', 'page': const Page5()},
-    {'name':'GEO FENCING', 'image':'assets/images/clip7.png', 'page': const Page5()},
-  ];
+  HomeController _homeController = HomeController();
+  late Future<HomeGridModuleResponse> _moduleResponse;
+
+  @override
+  void initState() {
+    super.initState();
+    // Fetch modules when the screen is initialized
+    _moduleResponse = HomeGridApiCall().fetchModules();
+  }
 
 
   @override
@@ -130,46 +134,70 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                    crossAxisSpacing: 5,
-                    mainAxisSpacing: 5,
-                  ),
-                  itemCount: gridItems.length,
-                  itemBuilder: (context, index){
-                    final item = gridItems[index];
-                    return GestureDetector(
-                      onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => item['page']));
-                      },
-                      child: Card(
-                        color: Colors.white,
-                        elevation: 3,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: Image.asset(item['image']!)
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: Center(
-                                child: Text(
-                                  item['name']!,
-                                  style: const TextStyle(
-                                      fontSize: 12, fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+              child: FutureBuilder<HomeGridModuleResponse>(
+                future: _moduleResponse,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (snapshot.hasData) {
+                    final activeModules = snapshot.data!.modules
+                        .where((module) => module.isActive == '1')
+                        .toList();
+
+                    if (activeModules.isEmpty) {
+                      return const Center(child: Text('No modules available'));
+                    }
+
+                    return GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        crossAxisSpacing: 5,
+                        mainAxisSpacing: 5,
                       ),
+                      itemCount: activeModules.length,
+                      itemBuilder: (context, index) {
+                        final item = activeModules[index];
+                        return GestureDetector(
+                          onTap: () {
+                            // Handle item tap
+                            _homeController.navigateToGridModule(context, item.moduleName);
+                          },
+                          child: Card(
+                            color: Colors.white,
+                            elevation: 3,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Image.asset(
+                                    'assets/images/homeGrid/${item.moduleName.toLowerCase().replaceAll(" ", "_")}.png',
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8.0),
+                                  child: Center(
+                                    child: Text(
+                                      item.moduleName,
+                                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                     );
+                  } else {
+                    // Handle the case where snapshot has no data
+                    return const Center(child: Text('No data available'));
                   }
+                },
               ),
             ),
-          )
+          ),
         ],
       ),
     );

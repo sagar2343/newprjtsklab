@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:projects/features/home/pages/Home_screen.dart';
-import 'features/login/views/login_screen.dart';
 
 void main() {
   runApp(const MyApp());
