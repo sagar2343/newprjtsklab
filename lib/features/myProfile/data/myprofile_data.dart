@@ -8,8 +8,8 @@ class MyProfileApiCall {
   Future<EmployeeResponse> fetchEmployeeDetails(String strRollCd, String strEmpCd) async {
     try {
       // Construct the API URL with query parameters
-      // final String apiUrl = '${HttpConstants.getBaseURL()}$APIHomeGridItem?StrRollCd=$strRollCd&StrEmpCd=$strEmpCd';
-      const String apiUrl = 'http://hrms.thalappakatti.com:4949/HRISAPI/Einfo/FunPubFetchEnfoDetails?StrRollCd=01&StrEmpCd=D027673';
+      final String apiUrl = '${HttpConstants.getBaseURL()}$APIMyProfile?StrRollCd=$strRollCd&StrEmpCd=$strEmpCd';
+      // const String apiUrl = 'http://hrms.thalappakatti.com:4949/HRISAPI/Einfo/FunPubFetchEnfoDetails?StrRollCd=01&StrEmpCd=D027673';
       final Uri uri = Uri.parse(apiUrl);
 
       // Perform the GET request

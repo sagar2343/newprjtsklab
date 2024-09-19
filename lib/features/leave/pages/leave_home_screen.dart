@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:projects/features/leave/data/leave_status_data.dart';
 import 'package:projects/features/widgets/custom_appbar.dart';
 
 import '../../../config/theme/color.dart';
+import '../data/response/leave_status_response.dart';
 
 class LeaveHomeScreen extends StatefulWidget {
   const LeaveHomeScreen({super.key});
@@ -12,31 +14,22 @@ class LeaveHomeScreen extends StatefulWidget {
 
 class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
 
-  final List<String> _dropdownItems = ['01/2024', '05/2024', '07/2024'];
+  late Future<List<LeaveMonthYear>> _leaveMonthsFuture;
+  String? _selectedDate;
+  List<String> _dropdownItems = [];
 
-  String _selectedDate = '01/2024'; // Default value for the dropdown
+  // final List<String> _dropdownItems = ['01/2024', '05/2024', '07/2024'];
+  // String _selectedDate = '01/2024'; // Default value for the dropdown
 
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // Fetch items for the dropdown when the widget is initialized
-  //   fetchDropdownItems();
-  // }
-  //
-  // // This function will fetch the dropdown items dynamically
-  // void fetchDropdownItems() async {
-  //   // Example of where to fetch data from an API
-  //   // For now, using a static list; replace with API call
-  //   // Simulate network delay
-  //   await Future.delayed(const Duration(seconds: 2));
-  //
-  //   // After fetching, update the state with new dropdown items
-  //   setState(() {
-  //     _dropdownItems = ['02/2024', '06/2024', '08/2024']; // Example fetched data
-  //     _selectedDate = _dropdownItems[0]; // Set the default to the first fetched item
-  //   });
-  // }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _leaveMonthsFuture = LeaveApiCall().fetchLeaveMonths('01', 'D027673');
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -54,53 +47,68 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
 
             /// Styled Dropdown Button
             SizedBox(height: h * 0.017),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Leave Status >',
-                  style: TextStyle(
-                    color: Colors.grey[900],
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                  ),
-                ),
+            FutureBuilder<List<LeaveMonthYear>>(
+                future: _leaveMonthsFuture,
+                builder: (context, snapshot){
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No leave months available'));
+                  }
+                  final leaveMonths = snapshot.data!;
+                  _dropdownItems = leaveMonths.map((e) => e.leaveMonthYear).toList();
+                  _selectedDate ??= _dropdownItems.isNotEmpty ? _dropdownItems.first : null;
 
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  height: h * 0.04,
-                  width: w * 0.3,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.grey, width: 1.0),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      isDense: true,
-                      value: _selectedDate,
-                      icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
-                      elevation: 15,
-                      style: const TextStyle(color: Colors.black,fontSize: 14),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _selectedDate = newValue!;
-                        });
-                      },
-                      items: _dropdownItems.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: const TextStyle(fontSize: 12),
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Leave Status >',
+                        style: TextStyle(
+                          color: Colors.grey[900],
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                        ),
+                      ),
+
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        height: h * 0.04,
+                        width: w * 0.3,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.grey, width: 1.0),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            isDense: true,
+                            value: _selectedDate,
+                            icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+                            elevation: 15,
+                            style: const TextStyle(color: Colors.black,fontSize: 14),
+                            onChanged: (String? newValue) {
+                              setState(() {
+                                _selectedDate = newValue!;
+                              });
+                            },
+                            items: _dropdownItems.map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value,
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                              );
+                            }).toList(),
                           ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-              ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
             ),
-
 
             ///Leaves circular data list
             SizedBox(height: h * 0.02),

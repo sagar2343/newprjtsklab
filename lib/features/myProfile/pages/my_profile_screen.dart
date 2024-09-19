@@ -14,6 +14,12 @@ class MyProfileScreen extends StatefulWidget {
 
 class _MyProfileScreenState extends State<MyProfileScreen> {
 
+  TextEditingController _addController = TextEditingController();
+  TextEditingController _pinController = TextEditingController();
+  TextEditingController _teleController = TextEditingController();
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _contactController = TextEditingController();
+
   late Future<EmployeeResponse> _employeeFuture;
   final MyProfileApiCall _myProfileApiCall = MyProfileApiCall();
 
@@ -22,6 +28,17 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     super.initState();
     _employeeFuture = _myProfileApiCall.fetchEmployeeDetails('01', 'D027673'); // Pass required params here
     print(_employeeFuture);
+  }
+
+
+  @override
+  void dispose() {
+    _addController.dispose();
+    _pinController.dispose();
+    _teleController.dispose();
+    _emailController.dispose();
+    _contactController.dispose();
+    super.dispose();
   }
 
   @override
@@ -66,6 +83,13 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
           }
 
           final employee = snapshot.data!;
+          _addController.text = employee.proPubEmployeeContact!.first.proPubStrPresentAdd.toString();
+          _pinController.text = employee.proPubEmployeeContact!.first.proPubStrPrPinCode.toString();
+          _teleController.text = employee.proPubEmployeeContact!.first.proPubStrPrTelephoneNo.toString();
+          _emailController.text = employee.proPubEmployeeContact!.first.proPubStrEmailPersonal.toString();
+          _contactController.text = employee.proPubEmployeeContact!.first.proPubStrEmpMobile.toString();
+
+
           return SingleChildScrollView(
             child: Column(
               children: [
@@ -108,9 +132,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text('${employee.proPubEmployeeDetails?.first.proPubStrEmpcd}',style: const TextStyle(fontSize: 18,fontWeight: FontWeight.w600)),
-                                Text('${employee.proPubEmployeeDetails?.first.proPubStrFullName}',style: const TextStyle(fontSize: 16,fontWeight: FontWeight.w500)),
-                                Text('${employee.proPubEmployeeDetails?.first.proPubStrDesignation}',style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400))
+                                Text('${employee.proPubEmployeeDetails!.first.proPubStrEmpcd}',style: const TextStyle(fontSize: 18,fontWeight: FontWeight.w600)),
+                                Text('${employee.proPubEmployeeDetails!.first.proPubStrFullName}',style: const TextStyle(fontSize: 16,fontWeight: FontWeight.w500)),
+                                Text('${employee.proPubEmployeeDetails!.first.proPubStrDesignation}',style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400))
                               ],
                             )
                           ],
@@ -144,62 +168,62 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 child: Text('Personal Details >',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                               ),
                               /// DOB
-                              const Row(
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.calendar_today_outlined,color: Colors.black,size: 14),
-                                  Text('DOB: 31 Aug 1985',style: TextStyle(fontSize: 14)),
+                                  const Icon(Icons.calendar_today_outlined,color: Colors.black,size: 14),
+                                  Text('DOB: ${employee.proPubEmployeeDetails!.first.proPubStrBirthDt}',style: const TextStyle(fontSize: 14)),
                                 ],
                               ),
                               SizedBox(height: h * 0.01),
                               /// Gender
-                              const Row(
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      Row(
+                                      const Row(
                                         children: [
                                           Icon(Icons.male,size: 14),
                                           Icon(Icons.female,size: 14),
                                           Text('Gender',style: TextStyle(fontSize: 16,color: Colors.grey))
                                         ],
                                       ),
-                                      Text('Male',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500))
+                                      Text("${employee.proPubEmployeeDetails!.first.proPubStrGender}",style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500))
                                     ],
                                   ),
                                   // VerticalDivider(color: Colors.black54,thickness: 1),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.center,
                                     children: [
-                                      Row(
+                                      const Row(
                                         children: [
                                           Icon(Icons.person_2,size: 14),
                                           Text('Maritial Status',style: TextStyle(fontSize: 16,color: Colors.grey))
                                         ],
                                       ),
-                                      Text('Single',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500))
+                                      Text('${employee.proPubEmployeeDetails!.first.proPubStrMaritalStatus}',style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500))
                                     ],
                                   ),
                                 ],
                               ),
                               const Divider(color: Colors.grey,thickness: 0.4),
                               /// Joining Date
-                              const Row(
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.center ,
                                 children: [
-                                  Icon(Icons.person_add,size: 14),
-                                  Text('Joining date: 16 Mar 2021',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
+                                  const Icon(Icons.person_add,size: 14),
+                                  Text('Joining date: ${employee.proPubEmployeeDetails!.first.proPubStrJoinDt}',style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
                                 ],
                               ),
                               const Divider(color: Colors.grey,thickness: 0.4),
                               /// Location
-                              const Row(
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.center ,
                                 children: [
-                                  Icon(Icons.location_on_outlined,size: 14),
-                                  Text('Location: Blr - Corporate',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
+                                  const Icon(Icons.location_on_outlined,size: 14),
+                                  Text('Location: ${employee.proPubEmployeeDetails!.first.proPubStrLocation}',style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
                                 ],
                               ),
                             ],
@@ -238,16 +262,16 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                   ],
                                 ),
                               ),
-                              const Text('Moinul Ashraf',style: TextStyle(fontSize: 18)),
+                              Text('${employee.proPubEmployeeReporting!.first.proPubStrAName}',style: const TextStyle(fontSize: 18)),
                               SizedBox(height: h * 0.01),
-                              const Text('GENERAL MANAGER HR',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                              Text('${employee.proPubEmployeeReporting!.first.proPubStrADesgination}',style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
                               SizedBox(height: h * 0.01),
                               /// Location
-                              const Row(
+                              Row(
                                 mainAxisAlignment: MainAxisAlignment.center ,
                                 children: [
-                                  Icon(Icons.location_on_outlined,size: 14),
-                                  Text('Location: Blr - Corporate',style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
+                                  const Icon(Icons.location_on_outlined,size: 14),
+                                  Text('Location: ${employee.proPubEmployeeReporting!.first.proPubStrALocation}',style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400)),
                                 ],
                               ),
                             ],
@@ -286,29 +310,35 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                                 ),
                               ),
                               /// 1. Full Address Text Field
-                              const CustomTextField(
+                              CustomTextField(
+                                controller: _addController,
                                 label: 'Address',
                               ),
                               SizedBox(height: h * 0.02),
                               /// 2. Pincode Text Field
-                              const CustomTextField(
+                              CustomTextField(
+                                controller: _pinController,
                                 label: 'Pincode',
                                 keyboardType: TextInputType.number,
                               ),
                               SizedBox(height: h * 0.02),
-                              /// 3. Address Line 2 Text Field
-                              const CustomTextField(
-                                label: 'Address Line 2',
+                              /// 3. Telephone No. Text Field
+                              CustomTextField(
+                                controller: _teleController,
+                                label: 'Telephone No.',
+                                keyboardType: TextInputType.phone,
                               ),
                               SizedBox(height: h * 0.02),
                               /// 4. Email Text Field
-                              const CustomTextField(
+                              CustomTextField(
+                                controller: _emailController,
                                 label: 'Email',
                                 keyboardType: TextInputType.emailAddress,
                               ),
                               SizedBox(height: h * 0.02),
                               /// 5. Contact Number Text Field
-                              const CustomTextField(
+                              CustomTextField(
+                                controller: _contactController,
                                 label: 'Contact Number',
                                 keyboardType: TextInputType.phone,
                               ),
