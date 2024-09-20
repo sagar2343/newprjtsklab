@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:projects/config/constants/http_constantss.dart';
 import 'package:projects/config/routes/api_routes.dart';
+import 'package:projects/features/leave/data/response/leave_details_response.dart';
 import 'package:projects/features/leave/data/response/leave_status_response.dart';
 
 
@@ -18,5 +19,17 @@ class LeaveApiCall{
     }
   }
 
+  // Second API call based on the selected month and year
+  Future<List<LeaveDetails>> fetchLeaveDetails(String strRollCd, String strEmpCd, String month, String year) async {
+    // final response = await http.get(Uri.parse('http://your-api-url.com/path?month=$month&year=$year')); // Replace with actual API
+    final response = await http.get(Uri.parse('${HttpConstants.getBaseURL()}$APILeaveDetails?StrRollcd=$strRollCd&StrEmpcd=$strEmpCd&StrYear=$year&StrMonth=$month'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonData = json.decode(response.body);
+      return jsonData.map((json) => LeaveDetails.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load leave details');
+    }
+  }
 
 }

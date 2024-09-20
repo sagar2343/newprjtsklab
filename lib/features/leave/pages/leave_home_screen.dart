@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:projects/features/leave/data/leave_status_data.dart';
+import 'package:projects/features/leave/data/response/leave_details_response.dart';
 import 'package:projects/features/widgets/custom_appbar.dart';
 
 import '../../../config/theme/color.dart';
@@ -15,11 +16,13 @@ class LeaveHomeScreen extends StatefulWidget {
 class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
 
   late Future<List<LeaveMonthYear>> _leaveMonthsFuture;
+  Future<List<LeaveDetails>>? _leaveDetailsFuture;
   String? _selectedDate;
+  String? _selectedMonth;
+  String? _selectedYear;
   List<String> _dropdownItems = [];
 
-  // final List<String> _dropdownItems = ['01/2024', '05/2024', '07/2024'];
-  // String _selectedDate = '01/2024'; // Default value for the dropdown
+  List<Color> cardColors = [lightblue, lightpink, sos1];
 
 
   @override
@@ -27,8 +30,31 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
     // TODO: implement initState
     super.initState();
     _leaveMonthsFuture = LeaveApiCall().fetchLeaveMonths('01', 'D027673');
+    _leaveMonthsFuture.then((leaveMonths){
+      if(leaveMonths.isNotEmpty){
+        setState(() {
+          _selectedDate = leaveMonths.first.leaveMonthYear;
+          _selectedMonth = leaveMonths.first.month;
+          _selectedYear = leaveMonths.first.year;
+          _leaveDetailsFuture = LeaveApiCall().fetchLeaveDetails('01', 'D027673', _selectedMonth!, _selectedYear!);
+        });
+      }
+    });
   }
 
+  void _onDropdownChanged(String? newValue, List<LeaveMonthYear> leaveMonths) {
+    final selectedLeave = leaveMonths.firstWhere((leaveMonth) => leaveMonth.leaveMonthYear == newValue,
+    );
+    setState(() {
+      _selectedDate = newValue!;
+      _selectedMonth = selectedLeave.month;
+      _selectedYear = selectedLeave.year;
+      // Fetch new data based on selected month and year
+      _leaveDetailsFuture = LeaveApiCall().fetchLeaveDetails('01', 'D027673', _selectedMonth!, _selectedYear!);
+
+      print('selected date : $_selectedDate, selected month : $_selectedMonth, selected year : $_selectedYear');
+    });
+  }
 
 
   @override
@@ -90,7 +116,8 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                             style: const TextStyle(color: Colors.black,fontSize: 14),
                             onChanged: (String? newValue) {
                               setState(() {
-                                _selectedDate = newValue!;
+                                _onDropdownChanged(newValue, leaveMonths);
+                                // print("newvalue ==== $newValue, leave months ===== $leaveMonths");
                               });
                             },
                             items: _dropdownItems.map<DropdownMenuItem<String>>((String value) {
@@ -113,110 +140,110 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
             ///Leaves circular data list
             SizedBox(height: h * 0.02),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.black, // Border color
-                          width: 1.0, // Border width
-                        ),
-                      ),
-                      child: const CircleAvatar(
-                        radius: 25,
-                        backgroundColor: sos2,
-                        child: Center(child: Text('32.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.black, // Border color
+                        width: 1.0, // Border width
                       ),
                     ),
-                    const Text('Total',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.black, // Border color
-                          width: 1.0, // Border width
-                        ),
-                      ),
-                      child: const CircleAvatar(
-                        radius: 25,
-                        backgroundColor: calendar4,
-                        child: Center(child: Text('0.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                    child: const CircleAvatar(
+                      radius: 25,
+                      backgroundColor: sos2,
+                      child: Center(child: Text('32.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                    ),
+                  ),
+                  const Text('Total',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.black, // Border color
+                        width: 1.0, // Border width
                       ),
                     ),
-                    const Text('Encased',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.black, // Border color
-                          width: 1.0, // Border width
-                        ),
-                      ),
-                      child: const CircleAvatar(
-                        radius: 25,
-                        backgroundColor: calendar6,
-                        child: Center(child: Text('1.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                    child: const CircleAvatar(
+                      radius: 25,
+                      backgroundColor: calendar4,
+                      child: Center(child: Text('0.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                    ),
+                  ),
+                  const Text('Encased',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.black, // Border color
+                        width: 1.0, // Border width
                       ),
                     ),
-                    const Text('Elapsed',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.black, // Border color
-                          width: 1.0, // Border width
-                        ),
-                      ),
-                      child: const CircleAvatar(
-                        radius: 25,
-                        backgroundColor: calendar1,
-                        child: Center(child: Text('0.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                    child: const CircleAvatar(
+                      radius: 25,
+                      backgroundColor: calendar6,
+                      child: Center(child: Text('1.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                    ),
+                  ),
+                  const Text('Elapsed',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.black, // Border color
+                        width: 1.0, // Border width
                       ),
                     ),
-                    const Text('Taken',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.black, // Border color
-                          width: 1.0, // Border width
-                        ),
-                      ),
-                      child: const CircleAvatar(
-                        radius: 25,
-                        backgroundColor: healthcare13,
-                        child: Center(child: Text('33.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                    child: const CircleAvatar(
+                      radius: 25,
+                      backgroundColor: calendar1,
+                      child: Center(child: Text('0.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                    ),
+                  ),
+                  const Text('Taken',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.black, // Border color
+                        width: 1.0, // Border width
                       ),
                     ),
-                    const Text('Available',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
-                  ],
-                )
-              ],
-            ),
+                    child: const CircleAvatar(
+                      radius: 25,
+                      backgroundColor: healthcare13,
+                      child: Center(child: Text('33.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                    ),
+                  ),
+                  const Text('Available',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
+                ],
+              )
+            ],
+          ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 10.0),
               child: Divider(height: h * 0.01,color: Colors.grey[500],thickness: 1),
@@ -233,70 +260,48 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
               ),
             ),
             SizedBox(height: h * 0.02),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Card(
-                  elevation: 4,
-                  child: Container(
-                    height: h * 0.11,
-                    width: w * 0.29,
-                    decoration: BoxDecoration(
-                      color: lightblue,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.black)
+            FutureBuilder<List<LeaveDetails>>(
+                future: _leaveDetailsFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text('No leave details found'));
+                  }
+
+                  final leaveDetails = snapshot.data!;
+                  return Expanded(
+                    child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: leaveDetails.length,
+                        itemBuilder: (context, index){
+                          final detail = leaveDetails[index];
+                          return Card(
+                            elevation: 4,
+                            child: Container(
+                              height: h * 0.11,
+                              width: w * 0.29,
+                              decoration: BoxDecoration(
+                                  color: cardColors[index],
+                                  borderRadius: BorderRadius.circular(10),
+                                  border: Border.all(color: Colors.black)
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(double.parse(detail.proPubStrAvailableBalance.toString()).toStringAsFixed(2),style: const TextStyle(color: Colors.black)),
+                                  Text('${detail.proPubStrLeaveDesc}',style: const TextStyle(color: Colors.black))
+                                ],
+                              ),
+                            ),
+                          );
+                        }
                     ),
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text('21.0',style: TextStyle(color: Colors.black)),
-                        Text('Earned Leave',style: TextStyle(color: Colors.black))
-                      ],
-                    ),
-                  ),
-                ),
-                Card(
-                  elevation: 4,
-                  child: Container(
-                    height: h * 0.11,
-                    width: w * 0.29,
-                    decoration: BoxDecoration(
-                        color: lightpink,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.black)
-                    ),
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text('5.0',style: TextStyle(color: Colors.black)),
-                        Text('Casual Leave',style: TextStyle(color: Colors.black))
-                      ],
-                    ),
-                  ),
-                ),
-                Card(
-                  elevation: 4,
-                  child: Container(
-                    height: h * 0.11,
-                    width: w * 0.29,
-                    decoration: BoxDecoration(
-                        color: sos1,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.black)
-                    ),
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text('6.0',style: TextStyle(color: Colors.black)),
-                        Text('Sick Leave',style: TextStyle(color: Colors.black))
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+                  );
+                }
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 15.0),
@@ -440,7 +445,7 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                 ),
               ],
             ),
-
+            SizedBox(height:  h * 0.1),
           ],
         ),
       ),
