@@ -18,7 +18,13 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
   late LeaveController _leaveController;
   late Future<List<LeaveMonthYear>> _leaveMonthsFuture;
   Future<List<LeaveDetails>>? _leaveDetailsFuture;
-
+  Map<String, double> _totals = {
+    'totalEncashed': 0,
+    'totalElapsed': 0,
+    'totalAvailable': 0,
+    'totalTaken': 0,
+    'totalTotal': 0,
+  };
 
   List<String> _dropdownItems = [];
 
@@ -38,6 +44,13 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
           _leaveController.selectedMonth = leaveMonths.first.month;
           _leaveController.selectedYear = leaveMonths.first.year;
           _leaveDetailsFuture = LeaveController().fetchLeaveDetails('01', 'D027673', _leaveController.selectedMonth!, _leaveController.selectedYear!);
+          _leaveDetailsFuture?.then((leaveDetails) {
+            _leaveController.calculateTotals(leaveDetails).then((totals){
+              setState(() {
+                _totals = totals;
+              });
+            });
+          });
         });
       }
     });
@@ -106,6 +119,13 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                               setState(() {
                                 _leaveController.onDropdownChanged(newValue, leaveMonths, setState);
                                 _leaveDetailsFuture = _leaveController.fetchLeaveDetails('01', 'D027673', _leaveController.selectedMonth!, _leaveController.selectedYear!);
+                                _leaveDetailsFuture?.then((leaveDetails) {
+                                  _leaveController.calculateTotals(leaveDetails).then((totals){
+                                    setState(() {
+                                      _totals = totals;
+                                    });
+                                  });
+                                });
                               });
                             },
                             items: _dropdownItems.map<DropdownMenuItem<String>>((String value) {
@@ -141,10 +161,10 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                         width: 1.0, // Border width
                       ),
                     ),
-                    child: const CircleAvatar(
+                    child: CircleAvatar(
                       radius: 25,
                       backgroundColor: sos2,
-                      child: Center(child: Text('32.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                      child: Center(child: Text(_totals['totalTotal'].toString(),style: TextStyle(fontSize: 12,color: Colors.black))),
                     ),
                   ),
                   const Text('Total',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
@@ -161,10 +181,10 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                         width: 1.0, // Border width
                       ),
                     ),
-                    child: const CircleAvatar(
+                    child: CircleAvatar(
                       radius: 25,
                       backgroundColor: calendar4,
-                      child: Center(child: Text('0.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                      child: Center(child: Text(_totals['totalEncashed'].toString(),style: const TextStyle(fontSize: 12,color: Colors.black))),
                     ),
                   ),
                   const Text('Encased',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
@@ -181,10 +201,10 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                         width: 1.0, // Border width
                       ),
                     ),
-                    child: const CircleAvatar(
+                    child: CircleAvatar(
                       radius: 25,
                       backgroundColor: calendar6,
-                      child: Center(child: Text('1.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                      child: Center(child: Text(_totals['totalElapsed'].toString(),style: const TextStyle(fontSize: 12,color: Colors.black))),
                     ),
                   ),
                   const Text('Elapsed',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
@@ -201,10 +221,10 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                         width: 1.0, // Border width
                       ),
                     ),
-                    child: const CircleAvatar(
+                    child: CircleAvatar(
                       radius: 25,
                       backgroundColor: calendar1,
-                      child: Center(child: Text('0.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                      child: Center(child: Text(_totals['totalTaken'].toString(),style: const TextStyle(fontSize: 12,color: Colors.black))),
                     ),
                   ),
                   const Text('Taken',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
@@ -221,10 +241,10 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                         width: 1.0, // Border width
                       ),
                     ),
-                    child: const CircleAvatar(
+                    child: CircleAvatar(
                       radius: 25,
                       backgroundColor: healthcare13,
-                      child: Center(child: Text('33.0',style: TextStyle(fontSize: 12,color: Colors.black))),
+                      child: Center(child: Text(_totals['totalAvailable'].toString(),style: const TextStyle(fontSize: 12,color: Colors.black))),
                     ),
                   ),
                   const Text('Available',style: TextStyle(fontSize: 15,fontWeight: FontWeight.w400))
@@ -433,7 +453,7 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                 ),
               ],
             ),
-            SizedBox(height:  h * 0.1),
+            SizedBox(height:  h * 0.12),
           ],
         ),
       ),
