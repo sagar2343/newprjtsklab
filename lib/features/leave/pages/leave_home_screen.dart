@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:projects/features/leave/data/leave_status_data.dart';
+import 'package:projects/features/leave/controller/leave_controller.dart';
 import 'package:projects/features/leave/data/response/leave_details_response.dart';
 import 'package:projects/features/widgets/custom_appbar.dart';
 
@@ -15,11 +15,11 @@ class LeaveHomeScreen extends StatefulWidget {
 
 class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
 
+  late LeaveController _leaveController;
   late Future<List<LeaveMonthYear>> _leaveMonthsFuture;
   Future<List<LeaveDetails>>? _leaveDetailsFuture;
-  String? _selectedDate;
-  String? _selectedMonth;
-  String? _selectedYear;
+
+
   List<String> _dropdownItems = [];
 
   List<Color> cardColors = [lightblue, lightpink, sos1];
@@ -29,32 +29,20 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _leaveMonthsFuture = LeaveApiCall().fetchLeaveMonths('01', 'D027673');
+    _leaveController = LeaveController();
+    _leaveMonthsFuture = LeaveController().fetchLeaveMonths('01', 'D027673');
     _leaveMonthsFuture.then((leaveMonths){
       if(leaveMonths.isNotEmpty){
         setState(() {
-          _selectedDate = leaveMonths.first.leaveMonthYear;
-          _selectedMonth = leaveMonths.first.month;
-          _selectedYear = leaveMonths.first.year;
-          _leaveDetailsFuture = LeaveApiCall().fetchLeaveDetails('01', 'D027673', _selectedMonth!, _selectedYear!);
+          _leaveController.selectedDate = leaveMonths.first.leaveMonthYear;
+          _leaveController.selectedMonth = leaveMonths.first.month;
+          _leaveController.selectedYear = leaveMonths.first.year;
+          _leaveDetailsFuture = LeaveController().fetchLeaveDetails('01', 'D027673', _leaveController.selectedMonth!, _leaveController.selectedYear!);
         });
       }
     });
   }
 
-  void _onDropdownChanged(String? newValue, List<LeaveMonthYear> leaveMonths) {
-    final selectedLeave = leaveMonths.firstWhere((leaveMonth) => leaveMonth.leaveMonthYear == newValue,
-    );
-    setState(() {
-      _selectedDate = newValue!;
-      _selectedMonth = selectedLeave.month;
-      _selectedYear = selectedLeave.year;
-      // Fetch new data based on selected month and year
-      _leaveDetailsFuture = LeaveApiCall().fetchLeaveDetails('01', 'D027673', _selectedMonth!, _selectedYear!);
-
-      print('selected date : $_selectedDate, selected month : $_selectedMonth, selected year : $_selectedYear');
-    });
-  }
 
 
   @override
@@ -85,7 +73,7 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                   }
                   final leaveMonths = snapshot.data!;
                   _dropdownItems = leaveMonths.map((e) => e.leaveMonthYear).toList();
-                  _selectedDate ??= _dropdownItems.isNotEmpty ? _dropdownItems.first : null;
+                  _leaveController.selectedDate ??= _dropdownItems.isNotEmpty ? _dropdownItems.first : null;
 
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -110,14 +98,14 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                         child: DropdownButtonHideUnderline(
                           child: DropdownButton<String>(
                             isDense: true,
-                            value: _selectedDate,
+                            value: _leaveController.selectedDate,
                             icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
                             elevation: 15,
                             style: const TextStyle(color: Colors.black,fontSize: 14),
                             onChanged: (String? newValue) {
                               setState(() {
-                                _onDropdownChanged(newValue, leaveMonths);
-                                // print("newvalue ==== $newValue, leave months ===== $leaveMonths");
+                                _leaveController.onDropdownChanged(newValue, leaveMonths, setState);
+                                _leaveDetailsFuture = _leaveController.fetchLeaveDetails('01', 'D027673', _leaveController.selectedMonth!, _leaveController.selectedYear!);
                               });
                             },
                             items: _dropdownItems.map<DropdownMenuItem<String>>((String value) {

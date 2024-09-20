@@ -10,8 +10,7 @@ class LeaveController {
     return LeaveApiCall().fetchLeaveMonths(type, employeeId);
   }
 
-  Future<List<LeaveDetails>> fetchLeaveDetails(
-      String type, String employeeId, String month, String year) {
+  Future<List<LeaveDetails>> fetchLeaveDetails(String type, String employeeId, String month, String year) {
     return LeaveApiCall().fetchLeaveDetails(type, employeeId, month, year);
   }
 
