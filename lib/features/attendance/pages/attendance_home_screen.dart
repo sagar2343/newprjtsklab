@@ -86,8 +86,8 @@ class _AttendanceHomeScreenState extends State<AttendanceHomeScreen> {
             ),
           ),
           _attendanceController.isLoading
-              ? const Expanded(child: Center(child: CircularProgressIndicator()))
-              : Expanded(
+          ? const Expanded(child: Center(child: CircularProgressIndicator()))
+          : Expanded(
             child: ListView.builder(
               itemCount: attendanceList.length,
               itemBuilder: (context, index) {

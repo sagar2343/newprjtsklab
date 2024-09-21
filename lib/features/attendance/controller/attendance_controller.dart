@@ -45,11 +45,14 @@ class AttendanceController {
   Future<void> loadDefaultAttendance() async {
     isLoading = true;
     final now = DateTime.now();
-    final lastMonth = DateTime(now.year, now.month - 1);
+    final lastMonthStart = DateTime(now.year, now.month - 1, 1); // Start of last month
+    final lastMonthEnd = DateTime(now.year, now.month, 0); // End of last month
+
+    selectedDateRange = DateTimeRange(start: lastMonthStart, end: lastMonthEnd);
 
     attendanceList = await fetchAttendance(
-        lastMonth.year.toString(),
-        lastMonth.month.toString(),
+        lastMonthStart.year.toString(),
+        lastMonthStart.month.toString(),
         "01D027673" // Replace with actual username
     );
     isLoading = false;
@@ -58,15 +61,29 @@ class AttendanceController {
 
   Future<void> fetchAttendanceForSelectedDateRange() async {
     if (selectedDateRange != null) {
-        isLoading = true;
+      isLoading = true;
+
+      // Fetch the attendance list
       attendanceList = await fetchAttendance(
           selectedDateRange!.start.year.toString(),
           selectedDateRange!.start.month.toString(),
           "01D027673" // Replace with actual username
       );
-        isLoading = false;
+
+      // Filter the attendance list based on the selected date range
+      attendanceList = attendanceList.where((attendance) {
+        // Parse the date from attendance.date (assuming format MM/dd/yyyy)
+        final attendanceDate = DateFormat('MM/dd/yyyy').parse(attendance.date);
+
+        // Check if the attendance date is within the selected date range
+        return attendanceDate.isAfter(selectedDateRange!.start.subtract(const Duration(days: 1))) &&
+            attendanceDate.isBefore(selectedDateRange!.end.add(const Duration(days: 1)));
+      }).toList();
+
+      isLoading = false;
     }
   }
+
 
 
 
@@ -82,6 +99,7 @@ class AttendanceController {
     selectedDateRange = DateTimeRange(start: startOfMonth, end: endOfMonth);
     await fetchAttendance(startOfMonth.year.toString(), startOfMonth.month.toString(), username);
   }
+
 
 
   String formatTime(String dateTimeString) {
