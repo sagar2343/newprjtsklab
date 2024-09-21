@@ -272,7 +272,7 @@ class _LeaveHomeScreenState extends State<LeaveHomeScreen> {
                 future: _leaveDetailsFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const Expanded(child: Center(child: CircularProgressIndicator()));
                   } else if (snapshot.hasError) {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
