@@ -150,7 +150,7 @@ class AttendanceController {
       case 'A':
         return 'Absent';
       case 'L':
-        return description;
+        return 'Leave';
       case 'GEO':
         return 'Geo Punch';
       case 'H':
